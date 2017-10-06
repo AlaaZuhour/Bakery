@@ -80,11 +80,12 @@ public class RecipeStepDetailFragment extends Fragment {
         textView.setText(stepArrayList.get(index).getDescription());
         if (!videoURL.isEmpty()) {
             initializePlayer(Uri.parse(videoURL));
+//            if(rootView.findViewWithTag("layout-land") != null)
 
             if (rootView.findViewWithTag("sw600dp-land-recipe_step_detail")!=null) {
                 getActivity().findViewById(R.id.fragment_container2).setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
-                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
             }
+            simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
         } else {
             player=null;
             simpleExoPlayerView.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.ic_visibility_off_white_36dp));
@@ -111,7 +112,7 @@ public class RecipeStepDetailFragment extends Fragment {
             public void onClick(View view) {
 
                 int lastIndex = stepArrayList.size()-1;
-                if (stepArrayList.get(index).getId() < stepArrayList.get(index).getId()) {
+                if (stepArrayList.get(index).getId() < stepArrayList.get(lastIndex).getId()) {
                     if (player!=null){
                         player.stop();
                     }
