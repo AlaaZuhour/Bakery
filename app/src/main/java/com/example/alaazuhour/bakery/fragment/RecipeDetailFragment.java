@@ -1,8 +1,13 @@
 package com.example.alaazuhour.bakery.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +25,7 @@ import com.example.alaazuhour.bakery.model.Step;
 import java.util.ArrayList;
 
 
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements StepAdapter.StepClickListener{
 
 
     private RecipeDetailFragmentListener  mListener;
@@ -43,10 +48,15 @@ public class RecipeDetailFragment extends Fragment {
         Recipe recipe = getActivity().getIntent().getExtras().getParcelable("recipe");
         ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) recipe.getIngredients();
         final ArrayList<Step> steps = (ArrayList<Step>) recipe.getSteps();
+        LinearLayoutManager layoutManager;
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         TextView ingredientView = (TextView) rootView.findViewById(R.id.textView4);
-        ListView stepView = (ListView) rootView.findViewById(R.id.steps_list);
-        StepAdapter stepAdapter = new StepAdapter(getActivity(),steps);
+        RecyclerView stepView = (RecyclerView) rootView.findViewById(R.id.steps_list);
+        layoutManager =
+                new LinearLayoutManager(getActivity());
+        stepView.setLayoutManager(layoutManager);
+        stepView.setHasFixedSize(true);
+        StepAdapter stepAdapter = new StepAdapter(this,steps);
         ArrayList<String> widgetIngredient= new ArrayList<>();
 
         for(int i =0;i<ingredients.size();i++){
@@ -54,19 +64,9 @@ public class RecipeDetailFragment extends Fragment {
             ingredientView.append("\t\t\t Quantity: "+ingredients.get(i).getQuantity()+"\n");
             ingredientView.append("\t\t\t Measure: "+ingredients.get(i).getMeasure()+"\n\n");
 
-            widgetIngredient.add(ingredients.get(i).getIngredient()+"\n"+
-                    "Quantity: "+ingredients.get(i).getQuantity()+"\n"+
-                    "Measure: "+ingredients.get(i).getMeasure()+"\n");
         }
         stepView.setAdapter(stepAdapter);
-        stepView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.onStepDetailClick(i);
-            }
-        });
 
-        UpdateBakeryService.startBakingService(getActivity(),widgetIngredient);
         return rootView;
     }
 
@@ -88,6 +88,11 @@ public class RecipeDetailFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onStepItemClick(int index) {
+        mListener.onStepDetailClick(index);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -99,7 +104,6 @@ public class RecipeDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface RecipeDetailFragmentListener {
-        // TODO: Update argument type and name
         void onStepDetailClick(int selected);
     }
 }

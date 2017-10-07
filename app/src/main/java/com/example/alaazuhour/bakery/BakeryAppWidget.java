@@ -17,20 +17,15 @@ public class BakeryAppWidget extends AppWidgetProvider {
     static ArrayList<String> ingredientsList = new ArrayList<>();
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                String ingredients,int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bakery_app_widget);
-        Intent intent = new Intent(context, RecipeDetailActivity.class);
-        intent.addCategory(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.ingredient_list,pendingIntent);
 
-        Intent gridIntent = new Intent(context, ListWidgetService.class);
-        views.setRemoteAdapter(R.id.ingredient_list, gridIntent);
-
-        // Instruct the widget manager to update the widget
+        views.setOnClickPendingIntent(R.id.baking_image, pendingIntent);
+        views.setTextViewText(R.id.appwidget_text,"Ingredients");
+        views.setTextViewText(R.id.textView5,ingredients);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -60,17 +55,17 @@ public class BakeryAppWidget extends AppWidgetProvider {
         final String action = intent.getAction();
 
         if (action.equals("android.appwidget.action.APPWIDGET_UPDATE1")) {
-            ingredientsList = intent.getExtras().getStringArrayList("ingredent_list");
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-            BakeryAppWidget.updateAppWidget(context, appWidgetManager, appWidgetIds);
+            String ingredients = intent.getExtras().getString("ingredents");
+            BakeryAppWidget.updateAppWidget(context, appWidgetManager,ingredients, appWidgetIds);
             super.onReceive(context, intent);
         }
     }
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,String ingredients, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager,ingredients, appWidgetId);
         }
     }
+
 }
 

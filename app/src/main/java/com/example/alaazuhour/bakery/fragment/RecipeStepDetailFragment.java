@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alaazuhour.bakery.R;
+import com.example.alaazuhour.bakery.adapter.StepAdapter;
 import com.example.alaazuhour.bakery.model.Recipe;
 import com.example.alaazuhour.bakery.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -159,8 +160,21 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (player!=null) {
+            player.stop();
+            player.release();
+        }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (player!=null) {
+            player.stop();
+            player.release();
+            player=null;
+        }
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -168,6 +182,23 @@ public class RecipeStepDetailFragment extends Fragment {
         outState.putParcelable("recipe",recipe);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (player!=null) {
+            player.stop();
+            player.release();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (player!=null) {
+            player.stop();
+            player.release();
+        }
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

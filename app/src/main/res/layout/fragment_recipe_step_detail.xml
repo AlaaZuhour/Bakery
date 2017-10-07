@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical|center_horizontal"
+    android:layout_marginTop="37dp"
     android:orientation="vertical"
     tools:context="com.example.alaazuhour.bakery.fragment.RecipeStepDetailFragment">
 
@@ -11,11 +12,10 @@
         android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="0dp"
+        android:layout_margin="0dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="0dp"
-        android:layout_margin="0dp" />
+        android:layout_marginRight="0dp" />
 
     <TextView
         android:id="@+id/step_description"

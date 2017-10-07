@@ -7,13 +7,17 @@
     android:orientation="vertical"
     tools:context="com.example.alaazuhour.bakery.MainActivity">
 
-    <GridView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recipes_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:paddingVertical="5dp" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>
