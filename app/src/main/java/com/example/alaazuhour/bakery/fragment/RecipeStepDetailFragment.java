@@ -19,6 +19,7 @@ import com.example.alaazuhour.bakery.R;
 import com.example.alaazuhour.bakery.adapter.StepAdapter;
 import com.example.alaazuhour.bakery.model.Recipe;
 import com.example.alaazuhour.bakery.model.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -43,11 +44,13 @@ public class RecipeStepDetailFragment extends Fragment {
     private ArrayList<Step> stepArrayList;
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer player;
+    private long playerPostion;
     private int index;
     private  Recipe recipe;
     private OnButtonClickListener mListener;
     private BandwidthMeter bandwidthMeter;
     private Handler mainHandler;
+    private String videoURL;
     public RecipeStepDetailFragment() {
         // Required empty public constructor
     }
@@ -67,6 +70,7 @@ public class RecipeStepDetailFragment extends Fragment {
         simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
         if(savedInstanceState == null) {
             recipe = getActivity().getIntent().getExtras().getParcelable("recipe");
+            playerPostion = C.TIME_UNSET;
             if(getArguments() != null)
               index = getArguments().getInt("selectd");
             else
@@ -74,19 +78,26 @@ public class RecipeStepDetailFragment extends Fragment {
         }else{
            recipe = savedInstanceState.getParcelable("recipe");
             index = savedInstanceState.getInt("selectd");
+            playerPostion = savedInstanceState.getLong("player_position", C.TIME_UNSET);
         }
         stepArrayList = (ArrayList<Step>) recipe.getSteps();
-        String videoURL = stepArrayList.get(index).getVideoURL();
+        videoURL = stepArrayList.get(index).getVideoURL();
         TextView textView = (TextView) rootView.findViewById(R.id.step_description);
         textView.setText(stepArrayList.get(index).getDescription());
         if (!videoURL.isEmpty()) {
             initializePlayer(Uri.parse(videoURL));
-//            if(rootView.findViewWithTag("layout-land") != null)
+            if(rootView.findViewWithTag("layout-land") != null){
+                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
+            }
 
             if (rootView.findViewWithTag("sw600dp-land-recipe_step_detail")!=null) {
                 getActivity().findViewById(R.id.fragment_container2).setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+//                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
             }
-            simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+            simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+
         } else {
             player=null;
             simpleExoPlayerView.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.ic_visibility_off_white_36dp));
@@ -137,7 +148,8 @@ public class RecipeStepDetailFragment extends Fragment {
 
             player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
             simpleExoPlayerView.setPlayer(player);
-
+            if (playerPostion != C.TIME_UNSET)
+                player.seekTo(playerPostion);
             String userAgent = Util.getUserAgent(getContext(), "Baking App");
             MediaSource mediaSource = new ExtractorMediaSource(parse, new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             player.prepare(mediaSource);
@@ -180,6 +192,7 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt("selectd",index);
         outState.putParcelable("recipe",recipe);
+        outState.putLong("player_position",playerPostion);
     }
 
     @Override
@@ -195,10 +208,19 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (player!=null) {
+            playerPostion = player.getCurrentPosition();
             player.stop();
             player.release();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (videoURL != null)
+            initializePlayer(Uri.parse(videoURL));
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

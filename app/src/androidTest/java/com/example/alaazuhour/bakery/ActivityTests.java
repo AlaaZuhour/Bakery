@@ -48,15 +48,14 @@ public class ActivityTests {
 
     @Test
     public void checkText_RecipeActivity() {
-        onData(anything()).inAdapterView(withId(R.id.recipes_list)).atPosition(1).perform(click());
+        onView(ViewMatchers.withId(R.id.recipes_list)).perform(RecyclerViewActions.scrollToPosition(1));
         onView(withText("Brownies")).check(matches(isDisplayed()));
-
     }
 
     @Test
     public void checkPlayerViewIsVisible_RecipeDetailActivity1() {
-        onData(anything()).inAdapterView(withId(R.id.recipes_list)).atPosition(0).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.steps_list)).atPosition(0).perform(click());
+        onView(ViewMatchers.withId(R.id.recipes_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        onView(ViewMatchers.withId(R.id.steps_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
         onView(withId(R.id.player_view)).check(matches(isDisplayed()));
     }
 

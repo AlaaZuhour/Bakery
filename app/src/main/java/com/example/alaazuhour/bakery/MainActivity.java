@@ -1,5 +1,6 @@
 package com.example.alaazuhour.bakery;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.PersistableBundle;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.alaazuhour.bakery.BakeryAppWidget.ingredientsList;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ItemClickListener {
     private ArrayList<Recipe> recipes;
@@ -125,7 +128,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 
     @Override
     public void onItemClickListener(int postion) {
-        UpdateBakeryService.startBakingService(this, (ArrayList<Ingredient>) recipes.get(postion).getIngredients());
+        String ingredients = null;
+        ArrayList<Ingredient> ingredients1 = (ArrayList<Ingredient>) recipes.get(postion).getIngredients();
+        for(int i =0;i<ingredients1.size();i++){
+            ingredients= "\t\u2022 "+ ingredients1.get(i).getIngredient()+"\n"+
+                    "\t\t\t Quantity: "+ingredients1.get(i).getQuantity()+"\n"+
+                    "\t\t\t Measure: "+ingredients1.get(i).getMeasure()+"\n\n";
+        }
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        BakeryAppWidget.updateAppWidget(this,appWidgetManager,ingredients,R.layout.bakery_app_widget);
         Intent intent = new Intent(MainActivity.this,RecipeDetailActivity.class);
         intent.putExtra("recipe",recipes.get(postion));
         startActivity(intent);

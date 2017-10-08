@@ -16,6 +16,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         RecipeStepDetailFragment.OnButtonClickListener {
     private boolean inStepsFragment ;
     private int stepIndex;
+    public static Recipe recipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +26,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Recipe recipe = getIntent().getExtras().getParcelable("recipe");
+        recipe = getIntent().getExtras().getParcelable("recipe");
         getSupportActionBar().setTitle(recipe.getName());
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {

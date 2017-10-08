@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:layout_marginTop="40dp"
+    android:layout_marginLeft="5dp"
     android:orientation="vertical"
     android:tag="sw600dp-land-recipe_step_detail"
     tools:context="com.example.alaazuhour.bakery.fragment.RecipeStepDetailFragment">
@@ -14,25 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp" />
 
     <TextView
         android:id="@+id/step_description"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_weight="0.31"
-        android:text="TextView" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.09"
+        android:padding="5dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
         android:layout_weight="0.31"
         android:orientation="horizontal">
 

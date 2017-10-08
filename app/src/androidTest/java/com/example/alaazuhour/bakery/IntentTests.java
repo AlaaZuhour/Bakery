@@ -57,10 +57,8 @@ public class IntentTests {
 
     @Test
     public void checkIntent_RecipeDetailActivity() {
-        onData(anything()).inAdapterView(withId(R.id.recipes_list)).atPosition(0).perform(click());
+        onView(ViewMatchers.withId(R.id.recipes_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
         intended(hasComponent(RecipeDetailActivity.class.getName()));
-
-
     }
 
 
