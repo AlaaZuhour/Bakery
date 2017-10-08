@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -79,11 +82,20 @@ public class RecipeStepDetailFragment extends Fragment {
            recipe = savedInstanceState.getParcelable("recipe");
             index = savedInstanceState.getInt("selectd");
             playerPostion = savedInstanceState.getLong("player_position", C.TIME_UNSET);
+            if (playerPostion != C.TIME_UNSET && player != null) {
+                player.seekTo(playerPostion);
+            }
         }
         stepArrayList = (ArrayList<Step>) recipe.getSteps();
         videoURL = stepArrayList.get(index).getVideoURL();
         TextView textView = (TextView) rootView.findViewById(R.id.step_description);
         textView.setText(stepArrayList.get(index).getDescription());
+        String imageUrl=stepArrayList.get(index).getThumbnailURL();
+        if (imageUrl!="") {
+            Uri builtUri = Uri.parse(imageUrl).buildUpon().build();
+            ImageView thumbImage = (ImageView) rootView.findViewById(R.id.imageView2);
+            Picasso.with(getContext()).load(builtUri).into(thumbImage);
+        }
         if (!videoURL.isEmpty()) {
             initializePlayer(Uri.parse(videoURL));
             if(rootView.findViewWithTag("layout-land") != null){
@@ -189,7 +201,6 @@ public class RecipeStepDetailFragment extends Fragment {
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt("selectd",index);
         outState.putParcelable("recipe",recipe);
         outState.putLong("player_position",playerPostion);
@@ -217,8 +228,9 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (videoURL != null)
-            initializePlayer(Uri.parse(videoURL));
+        if (playerPostion != C.TIME_UNSET && player != null) {
+            player.seekTo(playerPostion);
+        }
     }
 
     /**

@@ -27,6 +27,11 @@
         android:text="TextView"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

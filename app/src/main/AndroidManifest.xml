@@ -21,6 +21,8 @@
         <activity android:name=".RecipeDetailActivity"
             android:parentActivityName=".MainActivity"/>
 
+        <activity android:name=".ConfigurationActivity"
+            android:excludeFromRecents="true"/>
         <receiver android:name=".BakeryAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

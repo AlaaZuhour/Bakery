@@ -16,25 +16,37 @@ import java.util.ArrayList;
  * Implementation of App Widget functionality.
  */
 public class BakeryAppWidget extends AppWidgetProvider {
-    static ArrayList<String> ingredientsList = new ArrayList<>();
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                String ingredients,int appWidgetId) {
+                                int appWidgetId, String ingredients) {
 
+        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bakery_app_widget);
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent=new Intent(context, MainActivity.class);
+        //intent.putExtras(bundle);
 
-        views.setOnClickPendingIntent(R.id.baking_image, pendingIntent);
-        views.setTextViewText(R.id.appwidget_text,"Ingredients");
+
+        PendingIntent pendingIntent=PendingIntent.getActivity(context,0,intent,0);
         views.setTextViewText(R.id.textView5,ingredients);
+        views.setOnClickPendingIntent(R.id.appwidget_text,pendingIntent);
+
+        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        UpdateBakeryService.startBakingService(context, (ArrayList<Ingredient>) RecipeDetailActivity.recipe.getIngredients());
 
+       // startUpdatePlantWidgets(context);
+
+
+    }
+
+    public static void updateBakingWidgets(Context context, AppWidgetManager appWidgetManager,
+                                          String ingredients, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId,ingredients);
+        }
     }
 
     @Override
@@ -46,26 +58,5 @@ public class BakeryAppWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, BakeryAppWidget.class));
-
-        final String action = intent.getAction();
-
-        if (action.equals("android.appwidget.action.APPWIDGET_UPDATE1")) {
-            String ingredients = intent.getExtras().getString("ingredents");
-            BakeryAppWidget.updateAppWidget(context, appWidgetManager,ingredients, appWidgetIds);
-            super.onReceive(context, intent);
-        }
-    }
-
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,String ingredients, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager,ingredients, appWidgetId);
-        }
-    }
-
 }
 
