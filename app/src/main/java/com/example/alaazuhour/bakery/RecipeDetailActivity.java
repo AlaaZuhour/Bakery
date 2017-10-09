@@ -106,8 +106,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-       outState.putInt("step_index",stepIndex);
+        super.onSaveInstanceState(outState);
+        outState.putInt("step_index",stepIndex);
         outState.putBoolean("in_steps",inStepsFragment);
+
     }
 
     @Override

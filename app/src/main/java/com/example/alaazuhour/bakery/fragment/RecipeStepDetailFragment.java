@@ -201,6 +201,7 @@ public class RecipeStepDetailFragment extends Fragment {
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putInt("selectd",index);
         outState.putParcelable("recipe",recipe);
         outState.putLong("player_position",playerPostion);

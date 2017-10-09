@@ -44,17 +44,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable("state");
-            layoutManager.onRestoreInstanceState(listState);
-            position = savedInstanceState.getIntArray("SCROLL_POSITION");
-        }
-        if(position != null)
-            mScrollView.post(new Runnable() {
-                public void run() {
-                    mScrollView.scrollTo(position[0], position[1]);
-                }
-            });
+
         super.onCreate(savedInstanceState);
 
 
@@ -63,7 +53,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         Recipe recipe = getActivity().getIntent().getExtras().getParcelable("recipe");
         ArrayList<Ingredient> ingredients = (ArrayList<Ingredient>) recipe.getIngredients();
         final ArrayList<Step> steps = (ArrayList<Step>) recipe.getSteps();
@@ -87,7 +77,6 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
         }
         stepView.setAdapter(stepAdapter);
-
         return rootView;
     }
 
@@ -111,6 +100,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         listState = layoutManager.onSaveInstanceState();
         outState.putParcelable("state",listState);
         outState.putIntArray("SCROLL_POSITION",
