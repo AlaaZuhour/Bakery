@@ -61,6 +61,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.RecyclerViewHo
         return stepsList.size();
     }
 
+
+
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView stepDes;
         public RecyclerViewHolder(View itemView) {

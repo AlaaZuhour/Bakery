@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.alaazuhour.bakery.R;
-import com.example.alaazuhour.bakery.UpdateBakeryService;
 import com.example.alaazuhour.bakery.adapter.StepAdapter;
 import com.example.alaazuhour.bakery.model.Ingredient;
 import com.example.alaazuhour.bakery.model.Recipe;
@@ -33,14 +32,31 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     private RecipeDetailFragmentListener  mListener;
     private Parcelable listState;
+    private int recyclerPostion;
     private LinearLayoutManager layoutManager;
     private ScrollView mScrollView ;
     private  int[] position;
     private RecyclerView stepView;
+    private StepAdapter stepAdapter;
     public RecipeDetailFragment() {
         // Required empty public constructor
     }
 
+    public int getRecyclerPostion() {
+        return recyclerPostion;
+    }
+
+    public void setRecyclerPostion(int recyclerPostion) {
+        this.recyclerPostion = recyclerPostion;
+    }
+
+    public int[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(int[] position) {
+        this.position = position;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,22 +79,17 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
         TextView ingredientView = (TextView) rootView.findViewById(R.id.textView4);
         stepView = (RecyclerView) rootView.findViewById(R.id.steps_list);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        if(savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable("state");
-            layoutManager.onRestoreInstanceState(listState);
-            position = savedInstanceState.getIntArray("SCROLL_POSITION");
-            if(position != null)
-                mScrollView.post(new Runnable() {
-                    public void run() {
-                        mScrollView.scrollTo(position[0], position[1]);
-                    }
-                });
-
-        }
+       if(position != null)
+            mScrollView.post(new Runnable() {
+                public void run() {
+                    mScrollView.scrollTo(position[0], position[1]);
+                }
+            });
+            layoutManager.scrollToPosition(recyclerPostion);
 
         stepView.setLayoutManager(layoutManager);
         stepView.setHasFixedSize(true);
-        StepAdapter stepAdapter = new StepAdapter(this,steps);
+        stepAdapter = new StepAdapter(this,steps);
         ArrayList<String> widgetIngredient= new ArrayList<>();
 
         for(int i =0;i<ingredients.size();i++){
@@ -109,59 +120,19 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
         mListener = null;
     }
 
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        listState = layoutManager.onSaveInstanceState();
-        outState.putParcelable("state",listState);
-        outState.putIntArray("SCROLL_POSITION",
-                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+    public void onPause() {
+        if(layoutManager != null)
+        recyclerPostion = layoutManager.findLastVisibleItemPosition();
+        if(mScrollView != null)
+            position = new int[]{mScrollView.getScrollX(),mScrollView.getScrollY()};
+        super.onPause();
     }
-
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//    if(savedInstanceState != null) {
-//        listState = savedInstanceState.getParcelable("state");
-//        layoutManager.onRestoreInstanceState(listState);
-//        position = savedInstanceState.getIntArray("SCROLL_POSITION");
-//    }
-//        if(position != null)
-//            mScrollView.post(new Runnable() {
-//        public void run() {
-//            mScrollView.scrollTo(position[0], position[1]);
-//        }
-//    });
-//
-//    }
-
-
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        if(savedInstanceState != null) {
-//            listState = savedInstanceState.getParcelable("state");
-//            layoutManager.onRestoreInstanceState(listState);
-//            position = savedInstanceState.getIntArray("SCROLL_POSITION");
-//        }
-//        if(position != null)
-//            mScrollView.post(new Runnable() {
-//                public void run() {
-//                    mScrollView.scrollTo(position[0], position[1]);
-//                }
-//            });
-//    }
 
     @Override
     public void onResume() {
-//        if(position != null)
-//            mScrollView.post(new Runnable() {
-//                public void run() {
-//                    mScrollView.scrollTo(position[0], position[1]);
-//                }
-//            });
-//        if(listState != null)
-//            layoutManager.onRestoreInstanceState(listState);
+//
         super.onResume();
     }
 

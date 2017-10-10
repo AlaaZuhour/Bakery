@@ -58,6 +58,13 @@ public class RecipeStepDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public long getPlayerPostion() {
+        return playerPostion;
+    }
+
+    public void setPlayerPostion(long playerPostion) {
+        this.playerPostion = playerPostion;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +80,6 @@ public class RecipeStepDetailFragment extends Fragment {
         simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
         if(savedInstanceState == null) {
             recipe = getActivity().getIntent().getExtras().getParcelable("recipe");
-            playerPostion = C.TIME_UNSET;
             if(getArguments() != null)
               index = getArguments().getInt("selectd");
             else
@@ -81,10 +87,7 @@ public class RecipeStepDetailFragment extends Fragment {
         }else{
            recipe = savedInstanceState.getParcelable("recipe");
             index = savedInstanceState.getInt("selectd");
-            playerPostion = savedInstanceState.getLong("player_position", C.TIME_UNSET);
-            if (playerPostion != C.TIME_UNSET && player != null) {
-                player.seekTo(playerPostion);
-            }
+
         }
         stepArrayList = (ArrayList<Step>) recipe.getSteps();
         videoURL = stepArrayList.get(index).getVideoURL();
@@ -98,6 +101,7 @@ public class RecipeStepDetailFragment extends Fragment {
         }
         if (!videoURL.isEmpty()) {
             initializePlayer(Uri.parse(videoURL));
+            player.seekTo(playerPostion);
             if(rootView.findViewWithTag("layout-land") != null){
                 simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
                 simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
@@ -160,8 +164,6 @@ public class RecipeStepDetailFragment extends Fragment {
 
             player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
             simpleExoPlayerView.setPlayer(player);
-            if (playerPostion != C.TIME_UNSET)
-                player.seekTo(playerPostion);
             String userAgent = Util.getUserAgent(getContext(), "Baking App");
             MediaSource mediaSource = new ExtractorMediaSource(parse, new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             player.prepare(mediaSource);
@@ -204,7 +206,6 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt("selectd",index);
         outState.putParcelable("recipe",recipe);
-        outState.putLong("player_position",playerPostion);
     }
 
     @Override
@@ -229,9 +230,7 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (playerPostion != C.TIME_UNSET && player != null) {
-            player.seekTo(playerPostion);
-        }
+
     }
 
     /**

@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Ite
 //        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 //        BakeryAppWidget.updateAppWidget(this,appWidgetManager,ingredients,R.layout.bakery_app_widget);
 
-        UpdateBakeryService.startBakingService(this, (ArrayList<Ingredient>) recipes.get(postion).getIngredients());
         Intent intent = new Intent(MainActivity.this,RecipeDetailActivity.class);
         intent.putExtra("recipe",recipes.get(postion));
         startActivity(intent);

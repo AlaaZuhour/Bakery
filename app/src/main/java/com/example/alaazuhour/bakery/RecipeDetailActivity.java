@@ -17,6 +17,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements
     private boolean inStepsFragment ;
     private int stepIndex;
     public static Recipe recipe;
+    private RecipeDetailFragment fragment;
+    private RecipeStepDetailFragment fragment1;
+    private long playerPos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements
         setSupportActionBar(myToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fragment = new RecipeDetailFragment();
+        fragment1 = new RecipeStepDetailFragment();
 
         recipe = getIntent().getExtras().getParcelable("recipe");
         getSupportActionBar().setTitle(recipe.getName());
@@ -56,23 +61,26 @@ public class RecipeDetailActivity extends AppCompatActivity implements
             }
         });
         if(savedInstanceState == null ){
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment).addToBackStack(null)
                     .commit();
             if (findViewById(R.id.recipe_layout).getTag() != null && findViewById(R.id.recipe_layout).getTag().equals("tablet-land")) {
-                RecipeStepDetailFragment fragment1 = new RecipeStepDetailFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container2, fragment1).addToBackStack(null)
                         .commit();
             }
 
         }else{
-            if(savedInstanceState.getBoolean("in_steps"))
+            if(savedInstanceState.getBoolean("in_steps")) {
+                playerPos = savedInstanceState.getLong("playerPos");
                 onStepDetailClick(savedInstanceState.getInt("step_index"));
+            }
             else {
-                RecipeDetailFragment fragment = new RecipeDetailFragment();
+                if(fragment != null){
+                    fragment.setRecyclerPostion(savedInstanceState.getInt("recycler"));
+                    fragment.setPosition(savedInstanceState.getIntArray("scroll"));
+                }
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment).addToBackStack(null)
@@ -107,6 +115,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(fragment != null) {
+            outState.putInt("recycler", fragment.getRecyclerPostion());
+            outState.putIntArray("scroll", fragment.getPosition());
+        }
+        if(fragment1 != null){
+            outState.putLong("playerPos",fragment1.getPlayerPostion());
+        }
         outState.putInt("step_index",stepIndex);
         outState.putBoolean("in_steps",inStepsFragment);
 
@@ -116,20 +131,21 @@ public class RecipeDetailActivity extends AppCompatActivity implements
     public void onStepDetailClick(int index) {
         inStepsFragment = true;
         stepIndex = index;
-        RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
         Bundle arg = new Bundle();
         arg.putInt("selectd",index);
-        fragment.setArguments(arg);
+        fragment1 = new RecipeStepDetailFragment();
+        fragment1.setArguments(arg);
+        fragment1.setPlayerPostion(playerPos);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (findViewById(R.id.recipe_layout).getTag()!=null && findViewById(R.id.recipe_layout).getTag().equals("tablet-land")) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container2, fragment).addToBackStack(null)
+                    .replace(R.id.fragment_container2, fragment1).addToBackStack(null)
                     .commit();
 
         }
         else {
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment).addToBackStack(null)
+                    .replace(R.id.fragment_container, fragment1).addToBackStack(null)
                     .commit();
         }
     }
