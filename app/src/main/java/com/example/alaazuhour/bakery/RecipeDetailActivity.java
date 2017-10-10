@@ -55,9 +55,22 @@ public class RecipeDetailActivity extends AppCompatActivity implements
 
             }
         });
-        if(savedInstanceState != null ){
+        if(savedInstanceState == null ){
+            RecipeDetailFragment fragment = new RecipeDetailFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment).addToBackStack(null)
+                    .commit();
+            if (findViewById(R.id.recipe_layout).getTag() != null && findViewById(R.id.recipe_layout).getTag().equals("tablet-land")) {
+                RecipeStepDetailFragment fragment1 = new RecipeStepDetailFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container2, fragment1).addToBackStack(null)
+                        .commit();
+            }
+
+        }else{
             if(savedInstanceState.getBoolean("in_steps"))
-            onStepDetailClick(savedInstanceState.getInt("step_index"));
+                onStepDetailClick(savedInstanceState.getInt("step_index"));
             else {
                 RecipeDetailFragment fragment = new RecipeDetailFragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -71,19 +84,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements
                             .commit();
                 }
             }
-        }else {
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment).addToBackStack(null)
-                    .commit();
-            if (findViewById(R.id.recipe_layout).getTag() != null && findViewById(R.id.recipe_layout).getTag().equals("tablet-land")) {
-                RecipeStepDetailFragment fragment1 = new RecipeStepDetailFragment();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container2, fragment1).addToBackStack(null)
-                        .commit();
-            }
-
         }
     }
 
