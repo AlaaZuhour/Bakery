@@ -1,21 +1,17 @@
-package com.example.alaazuhour.bakery;
+package com.example.alaazuhour.bakery.widget;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 
 
+import com.example.alaazuhour.bakery.R;
 import com.example.alaazuhour.bakery.adapter.RecipeAdapter;
-import com.example.alaazuhour.bakery.fragment.RecipeDetailFragment;
 import com.example.alaazuhour.bakery.model.Ingredient;
 import com.example.alaazuhour.bakery.model.Recipe;
 import com.example.alaazuhour.bakery.retrofit.IRecipe;

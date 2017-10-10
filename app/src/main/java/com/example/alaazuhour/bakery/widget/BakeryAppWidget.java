@@ -1,4 +1,4 @@
-package com.example.alaazuhour.bakery;
+package com.example.alaazuhour.bakery.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.example.alaazuhour.bakery.MainActivity;
+import com.example.alaazuhour.bakery.R;
 import com.example.alaazuhour.bakery.model.Ingredient;
 
 import java.util.ArrayList;
