@@ -7,9 +7,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by alaazuhouer on 29/09/17.
- */
 
 public class RetrofitBuilder {
     static IRecipe iRecipe;
